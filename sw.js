@@ -1,7 +1,8 @@
-const CACHE_NAME = 'pennywise-plus-shell-v2';
+const CACHE_NAME = 'pennywise-plus-shell-v4';
 const APP_SHELL = [
   './',
   './index.html',
+  './blog.html',
   './style.css',
   './app.js',
   './manifest.json',

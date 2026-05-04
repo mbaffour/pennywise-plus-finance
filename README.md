@@ -33,7 +33,7 @@ Because browser storage is local to the browser/device, export JSON backups regu
 
 ## Origin Story
 
-Read the project philosophy in [Why I Made PennyWise+](./BLOG.md): a short note on structure, chaos, and why every cent deserves direction.
+Read the project philosophy in [Why I Made PennyWise+ Finance](./BLOG.md), or view it as a live page at `/blog.html`.
 
 ## Tech Stack
 
@@ -48,6 +48,7 @@ Read the project philosophy in [Why I Made PennyWise+](./BLOG.md): a short note 
 ```text
 pennywise-plus/
 |-- index.html
+|-- blog.html
 |-- style.css
 |-- app.js
 |-- logo.png
