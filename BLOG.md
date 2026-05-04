@@ -1,4 +1,4 @@
-# Why I Made PennyWise+
+# Why I Made PennyWise+ Finance
 
 **Track smarter. Spend wiser.**
 

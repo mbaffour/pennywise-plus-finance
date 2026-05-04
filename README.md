@@ -1,8 +1,8 @@
-# PennyWise+
+# PennyWise+ Finance
 
 **Track smarter. Spend wiser.**
 
-PennyWise+ is a private, browser-based personal finance dashboard for structuring everyday money decisions. The app is built around a simple idea: what you do not structure, you allow to be filled with chaos. PennyWise+ helps you track every cent, build budgets, analyze spending, manage savings goals, import bank CSVs, and print clean reports.
+PennyWise+ Finance is a private, browser-based personal finance dashboard for structuring everyday money decisions. The app is built around a simple idea: what you do not structure, you allow to be filled with chaos. PennyWise+ helps you track every cent, build budgets, analyze spending, manage savings goals, import bank CSVs, and print clean reports.
 
 ![PennyWise+ screenshot placeholder](./logo.png)
 
