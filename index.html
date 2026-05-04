@@ -12,6 +12,11 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div class="ambient-scene" aria-hidden="true">
+    <span class="orb orb-one"></span>
+    <span class="orb orb-two"></span>
+    <span class="orb orb-three"></span>
+  </div>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <div class="brand">
@@ -22,14 +27,23 @@
         </div>
       </div>
       <nav class="nav" aria-label="Main navigation">
-        <button class="nav-link active" type="button" data-view="dashboard">Dashboard</button>
-        <button class="nav-link" type="button" data-view="transactions">Transactions</button>
-        <button class="nav-link" type="button" data-view="budgets">Budgets</button>
-        <button class="nav-link" type="button" data-view="goals">Goals</button>
-        <button class="nav-link" type="button" data-view="import">Import</button>
-        <button class="nav-link" type="button" data-view="reports">Reports</button>
-        <button class="nav-link" type="button" data-view="settings">Settings</button>
+        <button class="nav-link active" type="button" data-view="dashboard"><span class="nav-icon">DB</span><span><strong>Dashboard</strong><small>Command center</small></span></button>
+        <button class="nav-link" type="button" data-view="transactions"><span class="nav-icon">TX</span><span><strong>Transactions</strong><small>Money trail</small></span></button>
+        <button class="nav-link" type="button" data-view="budgets"><span class="nav-icon">BG</span><span><strong>Budgets</strong><small>Shield limits</small></span></button>
+        <button class="nav-link" type="button" data-view="goals"><span class="nav-icon">GL</span><span><strong>Goals</strong><small>Treasure quests</small></span></button>
+        <button class="nav-link" type="button" data-view="import"><span class="nav-icon">IN</span><span><strong>Import</strong><small>CSV portal</small></span></button>
+        <button class="nav-link" type="button" data-view="reports"><span class="nav-icon">RP</span><span><strong>Reports</strong><small>Battle log</small></span></button>
+        <button class="nav-link" type="button" data-view="settings"><span class="nav-icon">ST</span><span><strong>Settings</strong><small>Control room</small></span></button>
       </nav>
+      <section class="quest-card" aria-label="PennyWise progress">
+        <div class="quest-ring"><span id="playerLevel">1</span></div>
+        <div>
+          <p class="quest-label">Clarity Level</p>
+          <strong id="xpLabel">Novice Tracker</strong>
+          <div class="progress xp-progress"><span id="xpProgress" style="width: 8%"></span></div>
+          <small id="streakLabel">Start tracking to build a streak.</small>
+        </div>
+      </section>
       <div class="privacy-card">
         <strong>Private by design</strong>
         <span>Your data stays in this browser. PennyWise+ does not send your financial data to any server.</span>
@@ -98,10 +112,19 @@
 
       <section id="dashboard" class="view active-view">
         <article class="hero-card card">
-          <div>
+          <div class="hero-copy">
             <p class="hero-kicker">Every cent deserves direction.</p>
             <h3>Structure your money before chaos spends it for you.</h3>
             <p>Track expenses, build budgets, analyze spending, export reports, and keep every record private and local in this browser.</p>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="coin-orbit orbit-one"><span></span></div>
+            <div class="coin-orbit orbit-two"><span></span></div>
+            <div class="vault-core">
+              <small>Clarity Score</small>
+              <strong id="coinScore">0</strong>
+              <span>chaos blocked</span>
+            </div>
           </div>
           <div class="hero-actions">
             <button class="primary-btn" id="heroAddBtn" type="button">Add first transaction</button>

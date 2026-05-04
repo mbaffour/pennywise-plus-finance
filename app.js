@@ -552,6 +552,7 @@ function renderMetrics() {
   const remaining = Math.max(0, Number(state.monthlyBudget || 0) - summary.expenseTotal);
   const days = getDaysBetween($('dateFrom').value, $('dateTo').value);
   const spendDays = new Set(summary.expenses.map(tx => tx.date));
+  const noSpendDays = days.filter(day => !spendDays.has(day)).length;
   $('metricIncome').textContent = money(summary.income);
   $('metricExpenses').textContent = money(summary.expenseTotal);
   $('metricNet').textContent = money(summary.net);
@@ -560,8 +561,29 @@ function renderMetrics() {
   $('metricBudgetRemaining').textContent = state.monthlyBudget ? `${money(remaining)} remaining` : 'Set one in Budgets';
   $('metricTopCategory').textContent = summary.topCategory;
   $('metricTransactionCount').textContent = list.length;
-  $('metricNoSpend').textContent = days.filter(day => !spendDays.has(day)).length;
+  $('metricNoSpend').textContent = noSpendDays;
   $('metricRecurring').textContent = money(summary.recurring);
+  renderGameStats({ list, summary, budgetUsed, noSpendDays });
+}
+
+function renderGameStats({ list, summary, budgetUsed, noSpendDays }) {
+  const budgetBonus = state.monthlyBudget && budgetUsed <= 100 ? 18 : state.monthlyBudget ? 8 : 0;
+  const goalBonus = Math.min(18, state.goals.length * 6);
+  const ruleBonus = Math.min(12, state.rules.length);
+  const transactionBonus = Math.min(24, list.length * 3);
+  const savingsBonus = summary.net > 0 ? 16 : 0;
+  const streakBonus = Math.min(12, noSpendDays);
+  const score = Math.max(0, Math.min(100, budgetBonus + goalBonus + ruleBonus + transactionBonus + savingsBonus + streakBonus));
+  const level = Math.max(1, Math.ceil(score / 20));
+  const titles = ['Novice Tracker', 'Budget Scout', 'Category Ranger', 'Savings Strategist', 'Chaos Tamer'];
+  if ($('coinScore')) $('coinScore').textContent = score;
+  if ($('playerLevel')) $('playerLevel').textContent = level;
+  if ($('xpLabel')) $('xpLabel').textContent = titles[Math.min(titles.length - 1, level - 1)];
+  if ($('xpProgress')) $('xpProgress').style.width = `${score}%`;
+  if ($('streakLabel')) {
+    const underBudget = state.monthlyBudget ? budgetUsed <= 100 : false;
+    $('streakLabel').textContent = `${noSpendDays} no-spend day${noSpendDays === 1 ? '' : 's'} this period${underBudget ? ' - budget shield active' : ''}.`;
+  }
 }
 
 function chartColors() {
