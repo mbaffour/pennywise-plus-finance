@@ -258,6 +258,7 @@ function sortTransactions(list, sortBy) {
 
 function init() {
   document.body.classList.toggle('light', state.theme === 'light');
+  initMenuState();
   $('dateFrom').value = monthStart();
   $('dateTo').value = monthEnd();
   bindEvents();
@@ -269,7 +270,13 @@ function init() {
 
 function bindEvents() {
   document.querySelectorAll('.nav-link').forEach(btn => btn.addEventListener('click', () => switchView(btn.dataset.view)));
-  $('menuToggle').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+  $('menuToggle').addEventListener('click', toggleMenu);
+  $('sidebarCollapseBtn').addEventListener('click', toggleMenu);
+  $('sidebarBackdrop').addEventListener('click', closeMobileMenu);
+  window.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeMobileMenu();
+  });
+  window.addEventListener('resize', syncMenuState);
   $('quickAddBtn').addEventListener('click', () => openTransactionDialog());
   $('heroAddBtn').addEventListener('click', () => openTransactionDialog());
   $('heroSampleBtn').addEventListener('click', seedSampleData);
@@ -300,6 +307,49 @@ function bindEvents() {
   $('mobileTransactions').addEventListener('click', handleTransactionAction);
 }
 
+function initMenuState() {
+  const collapsed = localStorage.getItem('pennywise_plus_menu_collapsed') === 'true';
+  $('appShell').classList.toggle('sidebar-collapsed', collapsed);
+  syncMenuState();
+}
+
+function isMobileMenu() {
+  return window.matchMedia('(max-width: 950px)').matches;
+}
+
+function toggleMenu() {
+  if (isMobileMenu()) {
+    const open = !$('sidebar').classList.contains('open');
+    $('sidebar').classList.toggle('open', open);
+    $('appShell').classList.toggle('menu-open', open);
+  } else {
+    const collapsed = !$('appShell').classList.contains('sidebar-collapsed');
+    $('appShell').classList.toggle('sidebar-collapsed', collapsed);
+    localStorage.setItem('pennywise_plus_menu_collapsed', String(collapsed));
+  }
+  syncMenuState();
+}
+
+function closeMobileMenu() {
+  $('sidebar').classList.remove('open');
+  $('appShell').classList.remove('menu-open');
+  syncMenuState();
+}
+
+function syncMenuState() {
+  const mobile = isMobileMenu();
+  const mobileOpen = $('sidebar').classList.contains('open');
+  const collapsed = $('appShell').classList.contains('sidebar-collapsed');
+  if (!mobile) {
+    $('sidebar').classList.remove('open');
+    $('appShell').classList.remove('menu-open');
+  }
+  $('menuToggle').setAttribute('aria-expanded', String(mobile ? mobileOpen : !collapsed));
+  $('menuToggleText').textContent = mobile ? (mobileOpen ? 'Close' : 'Menu') : (collapsed ? 'Open menu' : 'Hide menu');
+  $('sidebarCollapseBtn').textContent = mobile ? 'Close' : (collapsed ? 'Show' : 'Hide');
+  $('sidebarCollapseBtn').setAttribute('aria-label', mobile ? 'Close menu' : (collapsed ? 'Expand menu' : 'Collapse menu'));
+}
+
 function resetFilters() {
   $('dateFrom').value = monthStart();
   $('dateTo').value = monthEnd();
@@ -326,7 +376,7 @@ function switchView(view) {
   document.querySelectorAll('.view').forEach(section => section.classList.toggle('active-view', section.id === view));
   $('viewTitle').textContent = titles[view]?.[0] || 'Dashboard';
   $('viewSubtitle').textContent = titles[view]?.[1] || 'Know where every cent goes.';
-  $('sidebar').classList.remove('open');
+  closeMobileMenu();
   renderAll();
 }
 
