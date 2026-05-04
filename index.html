@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PennyWise+ is a private, local-first personal finance dashboard for budgets, transactions, savings goals, imports, analytics, and printable reports." />
+  <meta name="theme-color" content="#070b1b" />
+  <title>PennyWise+ | Track smarter. Spend wiser.</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./logo.png" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="./logo.png" alt="PennyWise+ logo" class="brand-logo" />
+        <div>
+          <h1>PennyWise+</h1>
+          <p>Track smarter. Spend wiser.</p>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-link active" type="button" data-view="dashboard">Dashboard</button>
+        <button class="nav-link" type="button" data-view="transactions">Transactions</button>
+        <button class="nav-link" type="button" data-view="budgets">Budgets</button>
+        <button class="nav-link" type="button" data-view="goals">Goals</button>
+        <button class="nav-link" type="button" data-view="import">Import</button>
+        <button class="nav-link" type="button" data-view="reports">Reports</button>
+        <button class="nav-link" type="button" data-view="settings">Settings</button>
+      </nav>
+      <div class="privacy-card">
+        <strong>Private by design</strong>
+        <span>Your data stays in this browser. PennyWise+ does not send your financial data to any server.</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Toggle menu">Menu</button>
+        <div>
+          <h2 id="viewTitle">Dashboard</h2>
+          <p id="viewSubtitle">Know where every cent goes.</p>
+        </div>
+        <div class="top-actions">
+          <button class="ghost-btn" id="themeToggle" type="button" aria-label="Toggle light and dark mode">Dark mode</button>
+          <button class="primary-btn" id="quickAddBtn" type="button">+ Add Transaction</button>
+        </div>
+      </header>
+
+      <section class="filters card" aria-label="Transaction filters">
+        <div class="field">
+          <label for="dateFrom">From</label>
+          <input type="date" id="dateFrom" />
+        </div>
+        <div class="field">
+          <label for="dateTo">To</label>
+          <input type="date" id="dateTo" />
+        </div>
+        <div class="field">
+          <label for="typeFilter">Type</label>
+          <select id="typeFilter">
+            <option value="all">All types</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="categoryFilter">Category</label>
+          <select id="categoryFilter"><option value="all">All categories</option></select>
+        </div>
+        <div class="field">
+          <label for="methodFilter">Payment Method</label>
+          <select id="methodFilter"><option value="all">All methods</option></select>
+        </div>
+        <div class="field">
+          <label for="tagFilter">Tag</label>
+          <select id="tagFilter"><option value="all">All tags</option></select>
+        </div>
+        <div class="field">
+          <label for="sortSelect">Sort</label>
+          <select id="sortSelect">
+            <option value="dateDesc">Newest first</option>
+            <option value="dateAsc">Oldest first</option>
+            <option value="amountDesc">Amount high to low</option>
+            <option value="amountAsc">Amount low to high</option>
+            <option value="categoryAsc">Category A-Z</option>
+            <option value="merchantAsc">Merchant A-Z</option>
+          </select>
+        </div>
+        <div class="field grow">
+          <label for="searchInput">Search</label>
+          <input type="search" id="searchInput" placeholder="Merchant, note, tag, method..." />
+        </div>
+        <button class="secondary-btn" id="resetFiltersBtn" type="button">Reset</button>
+      </section>
+
+      <section id="dashboard" class="view active-view">
+        <article class="hero-card card">
+          <div>
+            <p class="hero-kicker">Every cent deserves direction.</p>
+            <h3>Structure your money before chaos spends it for you.</h3>
+            <p>Track expenses, build budgets, analyze spending, export reports, and keep every record private and local in this browser.</p>
+          </div>
+          <div class="hero-actions">
+            <button class="primary-btn" id="heroAddBtn" type="button">Add first transaction</button>
+            <button class="secondary-btn" id="heroSampleBtn" type="button">Import sample data</button>
+          </div>
+        </article>
+
+        <div class="metric-grid">
+          <article class="metric-card positive"><span>Total Income</span><strong id="metricIncome">$0.00</strong><small id="incomeDelta">For selected period</small></article>
+          <article class="metric-card danger"><span>Total Expenses</span><strong id="metricExpenses">$0.00</strong><small id="expenseDelta">For selected period</small></article>
+          <article class="metric-card"><span>Net Balance</span><strong id="metricNet">$0.00</strong><small id="savingsRate">0% savings rate</small></article>
+          <article class="metric-card"><span>Budget Used</span><strong id="metricBudgetUsed">0%</strong><small id="metricBudgetRemaining">$0.00 remaining</small></article>
+          <article class="metric-card"><span>Top Category</span><strong id="metricTopCategory">None</strong><small>Highest spending category</small></article>
+          <article class="metric-card"><span>Transactions</span><strong id="metricTransactionCount">0</strong><small>In selected period</small></article>
+          <article class="metric-card"><span>No-spend Days</span><strong id="metricNoSpend">0</strong><small>Days without expenses</small></article>
+          <article class="metric-card"><span>Recurring Expenses</span><strong id="metricRecurring">$0.00</strong><small>Marked recurring this period</small></article>
+        </div>
+
+        <div class="grid two-col">
+          <article class="card chart-card"><div class="card-head"><h3>Spending Over Time</h3><span>Trend</span></div><canvas id="trendChart" aria-label="Spending over time chart"></canvas><p class="chart-summary" id="trendSummary"></p></article>
+          <article class="card chart-card"><div class="card-head"><h3>Category Breakdown</h3><span>Where money goes</span></div><canvas id="categoryChart" aria-label="Spending by category chart"></canvas><p class="chart-summary" id="categorySummary"></p></article>
+          <article class="card chart-card"><div class="card-head"><h3>Income vs Expenses</h3><span>Cash flow</span></div><canvas id="incomeExpenseChart" aria-label="Income versus expenses chart"></canvas><p class="chart-summary" id="cashflowSummary"></p></article>
+          <article class="card chart-card"><div class="card-head"><h3>Needs vs Wants</h3><span>Behavior</span></div><canvas id="needsChart" aria-label="Needs versus wants chart"></canvas><p class="chart-summary" id="needsSummary"></p></article>
+          <article class="card chart-card"><div class="card-head"><h3>Top Merchants</h3><span>Patterns</span></div><canvas id="merchantChart" aria-label="Top merchants chart"></canvas><p class="chart-summary" id="merchantSummary"></p></article>
+          <article class="card chart-card"><div class="card-head"><h3>Payment Methods</h3><span>Breakdown</span></div><canvas id="methodChart" aria-label="Payment method breakdown chart"></canvas><p class="chart-summary" id="methodSummary"></p></article>
+          <article class="card chart-card"><div class="card-head"><h3>Fixed vs Variable</h3><span>Flexibility</span></div><canvas id="fixedChart" aria-label="Fixed versus variable spending chart"></canvas><p class="chart-summary" id="fixedSummary"></p></article>
+          <article class="card chart-card"><div class="card-head"><h3>Budget Usage</h3><span>Category budgets</span></div><canvas id="budgetChart" aria-label="Budget usage by category chart"></canvas><p class="chart-summary" id="budgetSummary"></p></article>
+        </div>
+
+        <article class="card insights-card">
+          <div class="card-head"><h3>Smart Insights</h3><span>Turn small amounts into smarter decisions.</span></div>
+          <div id="insightsList" class="insights-list"></div>
+        </article>
+      </section>
+
+      <section id="transactions" class="view">
+        <article class="card">
+          <div class="card-head stack-mobile">
+            <div><h3>Transactions</h3><span>Search, sort, edit, duplicate, and audit every cent.</span></div>
+            <div class="inline-actions">
+              <button class="secondary-btn" id="exportCsvBtn" type="button">Export CSV</button>
+              <button class="secondary-btn" id="exportJsonBtn" type="button">Backup JSON</button>
+            </div>
+          </div>
+          <div class="table-wrap transaction-table">
+            <table>
+              <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Category</th><th>Merchant</th><th>Method</th><th>Tags</th><th>Actions</th></tr></thead>
+              <tbody id="transactionsBody"></tbody>
+            </table>
+          </div>
+          <div id="mobileTransactions" class="mobile-transactions"></div>
+          <div id="emptyTransactions" class="empty-state">No transactions match this view. Add one or import a CSV to begin.</div>
+        </article>
+      </section>
+
+      <section id="budgets" class="view">
+        <div class="grid two-col">
+          <article class="card">
+            <h3>Monthly Budgets</h3>
+            <p class="muted">Set an overall monthly cap and category limits. PennyWise+ will warn you before overspending sneaks up.</p>
+            <div class="mini-form">
+              <label class="sr-only" for="monthlyBudgetAmount">Overall monthly budget</label>
+              <input id="monthlyBudgetAmount" type="number" min="0" step="0.01" placeholder="Overall monthly budget" />
+              <button class="primary-btn" id="saveMonthlyBudgetBtn" type="button">Save Monthly Budget</button>
+            </div>
+            <form id="budgetForm" class="mini-form">
+              <label class="sr-only" for="budgetCategory">Budget category</label>
+              <select id="budgetCategory"></select>
+              <label class="sr-only" for="budgetAmount">Category budget amount</label>
+              <input id="budgetAmount" type="number" min="0" step="0.01" placeholder="Category budget" />
+              <button class="primary-btn" type="submit">Save Category Budget</button>
+            </form>
+            <div id="budgetList" class="budget-list"></div>
+          </article>
+          <article class="card">
+            <h3>Budget Health</h3>
+            <div id="budgetHealth" class="insights-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="goals" class="view">
+        <div class="grid two-col">
+          <article class="card">
+            <h3>Savings Goals</h3>
+            <form id="goalForm" class="mini-form vertical">
+              <input id="goalId" type="hidden" />
+              <label class="sr-only" for="goalName">Goal name</label>
+              <input id="goalName" placeholder="Goal name, e.g. Emergency fund" />
+              <label class="sr-only" for="goalTarget">Target amount</label>
+              <input id="goalTarget" type="number" min="0" step="0.01" placeholder="Target amount" />
+              <label class="sr-only" for="goalCurrent">Current amount</label>
+              <input id="goalCurrent" type="number" min="0" step="0.01" placeholder="Current amount" />
+              <label class="sr-only" for="goalDeadline">Goal deadline</label>
+              <input id="goalDeadline" type="date" />
+              <button class="primary-btn" id="saveGoalBtn" type="submit">Add Goal</button>
+            </form>
+          </article>
+          <article class="card">
+            <h3>Goal Progress</h3>
+            <div id="goalList" class="budget-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="import" class="view">
+        <div class="grid two-col">
+          <article class="card">
+            <h3>CSV Import</h3>
+            <p class="muted">Upload CSV, preview rows, map columns, apply merchant rules, skip duplicates, then save.</p>
+            <label for="csvFile">CSV file</label>
+            <input type="file" id="csvFile" accept=".csv,text/csv" />
+            <div id="mappingArea" class="mapping-area"></div>
+            <div class="inline-actions">
+              <button class="primary-btn" id="previewImportBtn" type="button">Preview Import</button>
+              <button class="secondary-btn" id="saveImportBtn" type="button" disabled>Save Previewed Transactions</button>
+            </div>
+            <div id="importSummary" class="import-summary" role="status">No file selected yet.</div>
+          </article>
+          <article class="card">
+            <h3>Auto-Categorization Rules</h3>
+            <form id="ruleForm" class="mini-form">
+              <label class="sr-only" for="ruleText">Rule text</label>
+              <input id="ruleText" placeholder="Merchant or notes contains..." />
+              <label class="sr-only" for="ruleCategory">Rule category</label>
+              <select id="ruleCategory"></select>
+              <button class="primary-btn" type="submit">Add Rule</button>
+            </form>
+            <div id="ruleList" class="rule-list"></div>
+          </article>
+        </div>
+        <article class="card">
+          <div class="card-head"><h3>Import Preview</h3><span id="previewCount">0 rows</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Date</th><th>Amount</th><th>Type</th><th>Merchant</th><th>Category</th><th>Notes</th></tr></thead><tbody id="previewBody"></tbody></table></div>
+        </article>
+      </section>
+
+      <section id="reports" class="view">
+        <article class="card report-card" id="printableReport">
+          <div class="card-head stack-mobile"><div><h3>PennyWise+ Financial Report</h3><span id="reportRange">Selected period</span></div><button class="primary-btn no-print" id="printReportBtn" type="button">Print / Save PDF</button></div>
+          <div id="reportSummary" class="report-summary"></div>
+          <div id="reportInsights" class="insights-list"></div>
+          <div class="print-chart-grid"><canvas id="reportCategoryChart" aria-label="Report category chart"></canvas><canvas id="reportTrendChart" aria-label="Report trend chart"></canvas></div>
+          <div class="grid two-col report-sections">
+            <section><h4>Budget Performance</h4><div id="reportBudget" class="insights-list"></div></section>
+            <section><h4>Savings Goals</h4><div id="reportGoals" class="insights-list"></div></section>
+          </div>
+          <h4>Largest Expenses</h4>
+          <div class="table-wrap"><table><thead><tr><th>Date</th><th>Amount</th><th>Category</th><th>Merchant</th><th>Notes</th></tr></thead><tbody id="largestBody"></tbody></table></div>
+        </article>
+      </section>
+
+      <section id="settings" class="view">
+        <div class="grid two-col">
+          <article class="card">
+            <h3>Categories</h3>
+            <form id="categoryForm" class="mini-form">
+              <label class="sr-only" for="newCategory">New category</label>
+              <input id="newCategory" placeholder="New category" />
+              <button class="primary-btn" type="submit">Add</button>
+            </form>
+            <div id="categoryList" class="rule-list"></div>
+          </article>
+          <article class="card">
+            <h3>Data Management</h3>
+            <p class="muted">Export backups before clearing browser data. Your data stays in this browser unless you export it yourself.</p>
+            <div class="button-stack">
+              <label class="secondary-btn file-label" for="jsonImport">Import JSON Backup<input type="file" id="jsonImport" accept=".json,application/json" hidden /></label>
+              <button class="secondary-btn" id="seedDataBtn" type="button">Load Sample Data</button>
+              <button class="danger-btn" id="clearDataBtn" type="button">Clear All Data</button>
+            </div>
+            <p class="muted backup-note" id="backupReminder">Backup reminder: export JSON after major updates.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="transactionDialog">
+    <form id="transactionForm" class="dialog-form">
+      <div class="dialog-head"><h3 id="dialogTitle">Add Transaction</h3><button type="button" class="icon-btn" id="closeDialogBtn" aria-label="Close transaction dialog">x</button></div>
+      <input type="hidden" id="transactionId" />
+      <div class="form-grid">
+        <div class="field"><label for="txDate">Date</label><input id="txDate" type="date" required /></div>
+        <div class="field"><label for="txType">Type</label><select id="txType"><option value="expense">Expense</option><option value="income">Income</option></select></div>
+        <div class="field"><label for="txAmount">Amount</label><input id="txAmount" type="number" min="0" step="0.01" required /></div>
+        <div class="field"><label for="txCategory">Category</label><select id="txCategory" required></select></div>
+        <div class="field"><label for="txSubcategory">Subcategory</label><input id="txSubcategory" placeholder="Optional" /></div>
+        <div class="field"><label for="txMerchant">Merchant/vendor/source</label><input id="txMerchant" placeholder="HEB, rent, paycheck..." /></div>
+        <div class="field"><label for="txMethod">Payment Method</label><input id="txMethod" placeholder="Debit, credit, cash..." /></div>
+        <div class="field"><label for="txTags">Tags</label><input id="txTags" placeholder="comma, separated, tags" /></div>
+        <div class="field"><label for="txNeedWant">Needs/Wants</label><select id="txNeedWant"><option value="need">Need</option><option value="want">Want</option><option value="neutral">Neutral</option></select></div>
+        <div class="field"><label for="txFixedVariable">Fixed/Variable</label><select id="txFixedVariable"><option value="variable">Variable</option><option value="fixed">Fixed</option></select></div>
+        <div class="field"><label for="txRecurring">Recurring</label><select id="txRecurring"><option value="none">None</option><option value="weekly">Weekly</option><option value="biweekly">Biweekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select></div>
+        <div class="field full"><label for="txNotes">Notes</label><textarea id="txNotes" placeholder="Why did this happen? Any context?"></textarea></div>
+      </div>
+      <div class="dialog-actions"><button type="button" class="secondary-btn" id="duplicateTxBtn">Duplicate</button><button type="submit" class="primary-btn">Save Transaction</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js"></script>
+</body>
+</html>

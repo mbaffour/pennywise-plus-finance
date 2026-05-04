@@ -1,0 +1,9 @@
+date,description,amount,category,payment_method,tags,notes
+2026-05-01,TAMU Stipend,2200,School/Work,Direct Deposit,income,Monthly stipend
+2026-05-01,Apartment Rent,-850,Rent/Housing,Bank Transfer,rent,Monthly housing
+2026-05-02,HEB Groceries,-42.18,Groceries,Debit,food,Weekly groceries
+2026-05-03,Torchys Tacos,-12.95,Eating Out,Credit,treat,Quick lunch
+2026-05-04,Spotify,-9.99,Subscriptions,Credit,music,Monthly subscription
+2026-05-05,Shell Gas,-33.20,Gas,Credit,car,Fuel
+2026-05-06,Walmart Supplies,-64.77,Shopping,Debit,supplies,Apartment basics
+2026-05-08,Netflix,-15.49,Subscriptions,Credit,streaming,Monthly subscription
