@@ -31,6 +31,10 @@ Your data stays in this browser. PennyWise+ does not send your financial data to
 
 Because browser storage is local to the browser/device, export JSON backups regularly, especially before clearing browser data or changing devices.
 
+## Origin Story
+
+Read the project philosophy in [Why I Made PennyWise+](./BLOG.md): a short note on structure, chaos, and why every cent deserves direction.
+
 ## Tech Stack
 
 - Static HTML, CSS, and JavaScript
