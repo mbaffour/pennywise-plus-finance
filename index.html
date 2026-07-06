@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.json" />
   <link rel="icon" href="./logo.png" />
   <link rel="stylesheet" href="./style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./vendor/chart.umd.min.js"></script>
 </head>
 <body>
   <div class="ambient-scene" aria-hidden="true">
@@ -171,6 +171,7 @@
             <div><h3>Transactions</h3><span>Search, sort, edit, duplicate, and audit every cent.</span></div>
             <div class="inline-actions">
               <button class="secondary-btn" id="exportCsvBtn" type="button">Export CSV</button>
+              <button class="secondary-btn" id="exportFilteredCsvBtn" type="button" title="Export only the transactions matching the current filters">Export Filtered CSV</button>
               <button class="secondary-btn" id="exportJsonBtn" type="button">Backup JSON</button>
             </div>
           </div>

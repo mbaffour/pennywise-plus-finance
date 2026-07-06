@@ -1,10 +1,11 @@
-const CACHE_NAME = 'pennywise-plus-shell-v6';
+const CACHE_NAME = 'pennywise-plus-shell-v7';
 const APP_SHELL = [
   './',
   './index.html',
   './blog.html',
   './style.css',
   './app.js',
+  './vendor/chart.umd.min.js',
   './manifest.json',
   './logo.png',
   './sample_transactions.csv'

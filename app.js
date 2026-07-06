@@ -295,6 +295,7 @@ function bindEvents() {
   $('ruleForm').addEventListener('submit', saveRule);
   $('categoryForm').addEventListener('submit', saveCategory);
   $('exportCsvBtn').addEventListener('click', exportCSV);
+  $('exportFilteredCsvBtn').addEventListener('click', exportFilteredCSV);
   $('exportJsonBtn').addEventListener('click', exportJSON);
   $('jsonImport').addEventListener('change', importJSON);
   $('clearDataBtn').addEventListener('click', clearAllData);
@@ -898,12 +899,25 @@ function deleteCategory(category) {
   toast('Category deleted.');
 }
 
-function exportCSV() {
+function transactionsToCSV(transactions) {
   const rows = [
     ['date', 'type', 'amount', 'category', 'subcategory', 'merchant', 'paymentMethod', 'tags', 'needWant', 'fixedVariable', 'recurring', 'notes'],
-    ...state.transactions.map(tx => [tx.date, tx.type, tx.amount, tx.category, tx.subcategory, tx.merchant, tx.paymentMethod, (tx.tags || []).join('|'), tx.needWant, tx.fixedVariable, tx.recurring, tx.notes])
+    ...transactions.map(tx => [tx.date, tx.type, tx.amount, tx.category, tx.subcategory, tx.merchant, tx.paymentMethod, (tx.tags || []).join('|'), tx.needWant, tx.fixedVariable, tx.recurring, tx.notes])
   ];
-  downloadBlob(rows.map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(',')).join('\n'), 'pennywise_transactions.csv', 'text/csv;charset=utf-8');
+  return rows.map(row => row.map(value => `"${String(value ?? '').replaceAll('"', '""')}"`).join(',')).join('\n');
+}
+
+function exportCSV() {
+  downloadBlob(transactionsToCSV(state.transactions), 'pennywise_transactions.csv', 'text/csv;charset=utf-8');
+}
+
+function exportFilteredCSV() {
+  const rows = filteredTransactions();
+  if (!rows.length) {
+    toast('No transactions match the current filters.');
+    return;
+  }
+  downloadBlob(transactionsToCSV(rows), 'pennywise_transactions_filtered.csv', 'text/csv;charset=utf-8');
 }
 
 function exportJSON() {

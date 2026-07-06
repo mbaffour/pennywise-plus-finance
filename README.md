@@ -6,6 +6,8 @@ PennyWise+ Finance is a private, browser-based personal finance dashboard for st
 
 ![PennyWise+ screenshot placeholder](./logo.png)
 
+> **Note:** This is the lightweight `localStorage` edition. Its sibling project **pennywise-plus** is the more complete version, with IndexedDB storage for larger datasets and additional features.
+
 ## Features
 
 - Add, edit, delete, and duplicate transactions
@@ -17,7 +19,7 @@ PennyWise+ Finance is a private, browser-based personal finance dashboard for st
 - Savings goals with deadlines, progress, monthly contribution needs, edit, and delete
 - CSV import with preview, auto column detection, manual mapping, duplicate avoidance, and rule-based categorization
 - JSON backup and restore
-- CSV export
+- CSV export (all transactions, or only the currently filtered view)
 - Printable report page designed for PDF export
 - Light and dark mode
 - Mobile transaction cards and responsive layout
@@ -38,7 +40,7 @@ Read the project philosophy in [Why I Made PennyWise+ Finance](./BLOG.md), or vi
 ## Tech Stack
 
 - Static HTML, CSS, and JavaScript
-- Chart.js via CDN
+- Chart.js (vendored locally in `./vendor/` so charts work fully offline)
 - Browser `localStorage`
 - Optional service worker shell cache
 - No backend, no database server, no paid services
@@ -54,6 +56,8 @@ pennywise-plus/
 |-- logo.png
 |-- manifest.json
 |-- sw.js
+|-- vendor/
+|   `-- chart.umd.min.js
 |-- sample_transactions.csv
 |-- README.md
 |-- DEPLOYMENT.md
